@@ -23,15 +23,9 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 horas
 }));
 
-// Rota raiz (essencial para Render)
+// Rota raiz (fallback para SPA)
 app.get("/", (req, res) => {
-  const indexPath = path.resolve(process.cwd(), "public", "index.html");
-  res.sendFile(indexPath, (err) => {
-    if (err) {
-      console.error("Erro ao servir index.html:", err);
-      res.status(404).json({ erro: "Página não encontrada" });
-    }
-  });
+  res.sendFile("public/index.html", { root: __dirname });
 });
 
 // Middleware de autenticação
@@ -589,7 +583,7 @@ app.get('/api/exportar/pdf', verificarAuth, (req, res) => {
   );
 });
 
-// ============ SERVIDOR ============
-app.listen(PORT, () => {
-  console.log(`✅ Servidor rodando em http://localhost:${PORT}`);
-});
+// ============ FALLBACK SPA ============
+// Se a rota não é API, redireciona para index.html
+app.use((req, res) => {
+  if (!req.path.startsWith('/api')) {
