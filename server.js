@@ -10,7 +10,7 @@ const ExcelJS = require('xlsx');
 const archiver = require('archiver');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middlewares
 app.use(bodyParser.json({ limit: '10mb' }));
@@ -22,6 +22,12 @@ app.use(session({
   saveUninitialized: false,
   cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 horas
 }));
+
+const path = require('path');
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 // Middleware de autenticação
 const verificarAuth = (req, res, next) => {
