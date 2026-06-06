@@ -23,8 +23,7 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 horas
 }));
 
-const path = require('path');
-
+// Rota raiz (essencial para Render)
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
