@@ -25,7 +25,13 @@ app.use(session({
 
 // Rota raiz (essencial para Render)
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  const indexPath = path.resolve(process.cwd(), "public", "index.html");
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error("Erro ao servir index.html:", err);
+      res.status(404).json({ erro: "Página não encontrada" });
+    }
+  });
 });
 
 // Middleware de autenticação
